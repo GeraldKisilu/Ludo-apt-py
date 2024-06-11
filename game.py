@@ -25,7 +25,7 @@ class Game:
         self.board.display(self.players)
 
     def move_token(self, player, roll):
-        # Simplified logic to choose a token
+        # Prompt the player to choose a token
         token_index = self.choose_token(player)
         if token_index is not None:
             player.move_token(token_index, roll)
@@ -33,11 +33,18 @@ class Game:
             print(f"{player.name} has no tokens to move.")
 
     def choose_token(self, player):
-        # Choose a token that can be moved
-        for i, token in enumerate(player.tokens):
-            if not token.is_finished():
-                return i
-        return None
+        while True:
+            try:
+                token_index = int(input(f"{player.name}, choose a token to move (0-3): "))
+                if 0 <= token_index < len(player.tokens):
+                    if not player.tokens[token_index].is_finished():
+                        return token_index
+                    else:
+                        print("This token has already finished. Choose another token.")
+                else:
+                    print("Invalid token index. Please choose a valid token.")
+            except ValueError:
+                print("Invalid input. Please enter a number between 0 and 3.")
 
     def is_game_over(self):
         # Check if any player has won
